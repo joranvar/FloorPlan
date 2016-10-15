@@ -10,10 +10,10 @@ module Lib
   , render
   ) where
 
-import Diagrams.Prelude (Diagram, circle)
+import Diagrams.Prelude (Diagram, rect)
 import Diagrams.Backend.Canvas (B)
 
 data Room = Room Int Int
 
 render :: Room -> Diagram B
-render _ = circle 1
+render (Room w h) = rect (fromIntegral w) (fromIntegral h)
