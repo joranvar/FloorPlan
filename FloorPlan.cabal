@@ -31,6 +31,8 @@ library
   exposed-modules:   Lib
   build-depends:     base >= 4.8 && < 5
                    , diagrams
+                   , diagrams-lib
+                   , diagrams-canvas
 
 executable FloorPlan-exe
   default-language:  Haskell2010
@@ -39,6 +41,7 @@ executable FloorPlan-exe
   main-is:           Main.hs
   build-depends:     base >= 4.8 && < 5
                    , FloorPlan
+                   , diagrams-canvas
 
 test-suite FloorPlan-test
   type:              exitcode-stdio-1.0
