@@ -1,5 +1,5 @@
 import Diagrams.Backend.Canvas.CmdLine (mainWith)
-import Lib
+import Lib (floorPlan)
 
 main :: IO ()
-main = mainWith . render $ Room 10 10
+main = mainWith floorPlan
