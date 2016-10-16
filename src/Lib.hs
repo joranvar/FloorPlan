@@ -19,9 +19,9 @@ data Room = Room { dimensions::V2 Double
                  , doors::[ Door ] }
 
 data Door = Door { wall::Direction V2 Double
-                 , direction::DoorDirection }
+                 , dir::DoorDirection }
 
-data DoorDirection = InWardLeft | InWardRight | OutwardLeft | OutwardRight
+data DoorDirection = InwardLeft | InwardRight | OutwardLeft | OutwardRight
 
 renderRoom :: Room -> Diagram B
 
@@ -38,6 +38,10 @@ bathroom   = mkRoom (75 + 100 + 75)                      (125 + 120)
 hall       = mkRoom (75 + 100 + 75)                      (100 + 60 + 100)
 livingroom = mkRoom (148 + 122 + 140)                    (122 + 200 + 125 + 162 + 142)
 toilet     = mkRoom 100                                  100
+           # addDoor (Door (direction (mkR2 0 (-1))) OutwardRight)
+
+addDoor :: Door -> Room -> Room
+addDoor d r = r { doors = d:doors r }
 
 rooms :: Diagram B
 rooms =
