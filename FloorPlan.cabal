@@ -55,24 +55,24 @@ test-suite FloorPlan-test
                    , tasty-smallcheck >= 0.8
                    , FloorPlan
 
-test-suite FloorPlan-doctest
-  type:              exitcode-stdio-1.0
-  default-language:  Haskell2010
-  ghc-options:       -Wall -Werror -O2 -Wall -threaded -rtsopts -with-rtsopts=-N
-  hs-source-dirs:    src-doctest
-  main-is:           Main.hs
-  build-depends:     base >= 4.8 && < 5
-                   , doctest >=0.10
-                   , Glob >= 0.7
-                   , QuickCheck >= 2.5
-                   , FloorPlan
+-- test-suite FloorPlan-doctest
+--   type:              exitcode-stdio-1.0
+--   default-language:  Haskell2010
+--   ghc-options:       -Wall -Werror -O2 -Wall -threaded -rtsopts -with-rtsopts=-N
+--   hs-source-dirs:    src-doctest
+--   main-is:           Main.hs
+--   build-depends:     base >= 4.8 && < 5
+--                    , doctest >=0.10
+--                    , Glob >= 0.7
+--                    , QuickCheck >= 2.5
+--                    , FloorPlan
 
-benchmark FloorPlan-benchmark
-  type:              exitcode-stdio-1.0
-  default-language:  Haskell2010
-  ghc-options:       -Wall -Werror -O2 -Wall -threaded -rtsopts -with-rtsopts=-N
-  hs-source-dirs:    src-benchmark
-  main-is:           Main.hs
-  build-depends:     base >= 4.8 && < 5
-                   , criterion >= 1.1
-                   , FloorPlan
+-- benchmark FloorPlan-benchmark
+--   type:              exitcode-stdio-1.0
+--   default-language:  Haskell2010
+--   ghc-options:       -Wall -Werror -O2 -Wall -threaded -rtsopts -with-rtsopts=-N
+--   hs-source-dirs:    src-benchmark
+--   main-is:           Main.hs
+--   build-depends:     base >= 4.8 && < 5
+--                    , criterion >= 1.1
+--                    , FloorPlan
