@@ -37,12 +37,12 @@ renderDoor w (Door d t) =
              OutwardRight -> id
              InwardRight -> negate
              OutwardLeft -> negate
-  in (arc' 100 d (t' 1/4 @@ turn) # lw thin
+  in (arc' 90 d (t' 1/4 @@ turn) # lw thin
       `atop`
-      (arrowV (100 * fromDirection d)) # lw thin)
+      (arrowV (90 * fromDirection d)) # lw thin)
      # rectEnvelope (mkP2 0 0) (mkR2 0 0)
      # translate (w / 2) -- To wall
-     # translate (-50 * (rotate (t' 1/4 @@ turn) (fromDirection d))) -- Align center
+     # translate (-45 * (rotate (t' 1/4 @@ turn) (fromDirection d))) -- Align center
 
 mkRoom :: Double -> Double -> Room
 mkRoom x y = Room (mkR2 x y) []
