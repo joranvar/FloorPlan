@@ -12,6 +12,7 @@ module Lib
   , floorPlan
   ) where
 
+import Data.List (foldl')
 import Diagrams.Prelude
 import Diagrams.Backend.Canvas (B)
 
@@ -24,8 +25,13 @@ data Door = Door { wall::Direction V2 Double
 data DoorDirection = InwardLeft | InwardRight | OutwardLeft | OutwardRight
 
 renderRoom :: Room -> Diagram B
+renderRoom r =
+  (uncurry rect . unr2 $ dimensions r)
+  `atop`
+  (foldl' atop mempty $ map renderDoor $ doors r)
 
-renderRoom (Room dim _) = uncurry rect . unr2 $ dim
+renderDoor :: Door -> Diagram B
+renderDoor (Door d _) = arc' 100 d (1/4 @@ turn)
 
 mkRoom :: Double -> Double -> Room
 mkRoom x y = Room (mkR2 x y) []
