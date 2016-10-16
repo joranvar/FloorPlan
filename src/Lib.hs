@@ -29,10 +29,10 @@ renderRoom :: Room -> Diagram B
 renderRoom r =
   (uncurry rect . unr2 $ dimensions r)
   `atop`
-  (foldl' atop mempty $ map (\d -> renderDoor (dimensions r * (fromDirection $ wall d)) d) $ doors r)
+  (foldl' atop mempty $ map (\d -> renderDoor r d) $ doors r)
 
-renderDoor :: V2 Double -> Door -> Diagram B
-renderDoor w (Door d t _) =
+renderDoor :: Room -> Door -> Diagram B
+renderDoor r (Door d t _) =
   let t' = case t of
              InwardLeft -> negate
              OutwardRight -> id
@@ -42,11 +42,12 @@ renderDoor w (Door d t _) =
              InwardLeft -> fmap negate d
              InwardRight -> fmap negate d
              _ -> d
+      wOffset = dimensions r * (fromDirection $ d)
   in (arc' 90 d' (t' 1/4 @@ turn) # lw thin
       `atop`
       (arrowV (90 * fromDirection d')) # lw thin)
      # rectEnvelope (mkP2 0 0) (mkR2 0 0)
-     # translate (w / 2) -- To wall
+     # translate (wOffset / 2) -- To wall
      # translate (-45 * (rotate (t' 1/4 @@ turn) (fromDirection d'))) -- Align center
 
 mkRoom :: Double -> Double -> Room
