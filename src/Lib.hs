@@ -20,7 +20,8 @@ data Room = Room { dimensions::V2 Double
                  , doors::[ Door ] }
 
 data Door = Door { wall::Direction V2 Double
-                 , dir::DoorDirection }
+                 , dir::DoorDirection
+                 , offset::Double }
 
 data DoorDirection = InwardLeft | InwardRight | OutwardLeft | OutwardRight
 
@@ -31,7 +32,7 @@ renderRoom r =
   (foldl' atop mempty $ map (\d -> renderDoor (dimensions r * (fromDirection $ wall d)) d) $ doors r)
 
 renderDoor :: V2 Double -> Door -> Diagram B
-renderDoor w (Door d t) =
+renderDoor w (Door d t _) =
   let t' = case t of
              InwardLeft -> negate
              OutwardRight -> id
@@ -53,19 +54,19 @@ mkRoom x y = Room (mkR2 x y) []
 
 bedroom1, bedroom2, kitchen, bathroom, hall, livingroom, toilet ::  Room
 bedroom1   = mkRoom (120 + 100 + 15)                     (60 + 100 + 125 + 120)
-           # addDoor (Door (direction unit_Y) InwardRight)
+           # addDoor (Door (direction unit_Y) InwardRight (-15))
 bedroom2   = mkRoom (55 + 110 + 50)                      (60 + 100 + 125 + 120)
-           # addDoor (Door (direction unitX) InwardLeft)
+           # addDoor (Door (direction unitX) InwardLeft 60)
 kitchen    = mkRoom (60 + 60 + 100 + 15 + 55 + 110 + 50) (100 + 20 + 100)
-           # addDoor (Door (direction unitX) InwardRight)
+           # addDoor (Door (direction unitX) InwardRight 120)
 bathroom   = mkRoom (75 + 100 + 75)                      (125 + 120)
-           # addDoor (Door (direction unit_Y) OutwardLeft)
+           # addDoor (Door (direction unit_Y) OutwardLeft 75)
 hall       = mkRoom (75 + 100 + 75)                      (100 + 60 + 100)
-           # addDoor (Door (direction unit_Y) InwardRight)
+           # addDoor (Door (direction unit_Y) InwardRight (-130))
 livingroom = mkRoom (148 + 122 + 140)                    (122 + 200 + 125 + 162 + 142)
-           # addDoor (Door (direction unit_X) InwardLeft)
+           # addDoor (Door (direction unit_X) InwardLeft (122 + 125))
 toilet     = mkRoom 100                                  100
-           # addDoor (Door (direction unitY) OutwardRight)
+           # addDoor (Door (direction unitY) OutwardRight 0)
 
 addDoor :: Door -> Room -> Room
 addDoor d r = r { doors = d:doors r }
