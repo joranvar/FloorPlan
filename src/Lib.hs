@@ -28,10 +28,18 @@ renderRoom :: Room -> Diagram B
 renderRoom r =
   (uncurry rect . unr2 $ dimensions r)
   `atop`
-  (foldl' atop mempty $ map renderDoor $ doors r)
+  (foldl' atop mempty $ map (\d -> renderDoor (dimensions r * (fromDirection $ wall d)) d) $ doors r)
 
-renderDoor :: Door -> Diagram B
-renderDoor (Door d _) = arc' 100 d (1/4 @@ turn)
+renderDoor :: V2 Double -> Door -> Diagram B
+renderDoor w (Door d t) =
+  let t' = case t of
+             InwardLeft -> id
+             OutwardRight -> id
+             InwardRight -> negate
+             OutwardLeft -> negate
+  in (arc' 100 d (t' 1/4 @@ turn) `atop` (arrowV (100 * fromDirection d)))
+     # translate (w / 2) -- To wall
+     # translate (-50 * (rotate (t' 1/4 @@ turn) (fromDirection d))) -- Align center
 
 mkRoom :: Double -> Double -> Room
 mkRoom x y = Room (mkR2 x y) []
@@ -44,7 +52,7 @@ bathroom   = mkRoom (75 + 100 + 75)                      (125 + 120)
 hall       = mkRoom (75 + 100 + 75)                      (100 + 60 + 100)
 livingroom = mkRoom (148 + 122 + 140)                    (122 + 200 + 125 + 162 + 142)
 toilet     = mkRoom 100                                  100
-           # addDoor (Door (direction (mkR2 0 (-1))) OutwardRight)
+           # addDoor (Door (direction unitY) OutwardRight)
 
 addDoor :: Door -> Room -> Room
 addDoor d r = r { doors = d:doors r }
