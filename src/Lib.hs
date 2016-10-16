@@ -1,6 +1,7 @@
 {-# LANGUAGE NoMonomorphismRestriction
            , PartialTypeSignatures
-           , FlexibleContexts #-}
+           , FlexibleContexts
+           , RecordWildCards #-}
 -- | Draw my floor plan
 module Lib
   (
@@ -17,7 +18,8 @@ import Diagrams.Prelude
 import Diagrams.Backend.SVG (B)
 
 data Room = Room { dimensions::V2 Double
-                 , doors::[ Door ] }
+                 , doors::[ Door ]
+                 , furniture::[ Furniture ]}
 
 data Door = Door { wall::Direction V2 Double
                  , dir::DoorDirection
@@ -25,11 +27,17 @@ data Door = Door { wall::Direction V2 Double
 
 data DoorDirection = InwardLeft | InwardRight | OutwardLeft | OutwardRight
 
+data Furniture = Furniture { loc::V2 Double
+                           , dim::V2 Double
+                           , name::String }
+
 renderRoom :: Room -> Diagram B
 renderRoom r =
   (uncurry rect . unr2 $ dimensions r)
   `atop`
   (foldl' atop mempty $ map (\d -> renderDoor r d) $ doors r)
+  `atop`
+  (foldl' atop mempty $ map (\f -> renderFurniture r f) $ furniture r)
 
 renderDoor :: Room -> Door -> Diagram B
 renderDoor r (Door d t o) =
@@ -57,8 +65,14 @@ renderDoor r (Door d t o) =
      # translate cOffset -- Correct for center of door
      # translate dOffset -- Place correctly in wall
 
+renderFurniture :: Room -> Furniture -> Diagram B
+renderFurniture r Furniture{..} =
+  ((uncurry rect) (unr2 dim) # lw thin # lc blue <> baselineText name)
+  # translate (loc - fmap (/ 2) (dimensions r - dim))
+  # rectEnvelope (mkP2 0 0) (mkR2 0 0) -- Size 0 envelope
+
 mkRoom :: Double -> Double -> Room
-mkRoom x y = Room (mkR2 x y) []
+mkRoom x y = Room (mkR2 x y) [] []
 
 bedroom1, bedroom2, kitchen, bathroom, hall, livingroom, toilet ::  Room
 bedroom1   = mkRoom (120 + 100 + 15)                     (60 + 100 + 125 + 120)
@@ -67,6 +81,7 @@ bedroom2   = mkRoom (55 + 110 + 50)                      (60 + 100 + 125 + 120)
            # addDoor (Door (direction unitX) InwardLeft 60)
 kitchen    = mkRoom (60 + 60 + 100 + 15 + 55 + 110 + 50) (100 + 20 + 100)
            # addDoor (Door (direction unitX) InwardRight 120)
+           # addFurniture (Furniture (mkR2 0 0) (mkR2 60 (100 + 20 + 100)) "counter")
 bathroom   = mkRoom (75 + 100 + 75)                      (125 + 120)
            # addDoor (Door (direction unit_Y) OutwardLeft 75)
 hall       = mkRoom (75 + 100 + 75)                      (100 + 60 + 100)
@@ -78,6 +93,9 @@ toilet     = mkRoom 100                                  100
 
 addDoor :: Door -> Room -> Room
 addDoor d r = r { doors = d:doors r }
+
+addFurniture :: Furniture -> Room -> Room
+addFurniture f r = r { furniture = f:furniture r }
 
 rooms :: Diagram B
 rooms =
