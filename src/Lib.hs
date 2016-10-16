@@ -21,7 +21,7 @@ data Room = Room { dimensions::V2 Double
 
 data Door = Door { wall::Direction V2 Double
                  , dir::DoorDirection
-                 , offset::Double }
+                 , fromCorner::Double }
 
 data DoorDirection = InwardLeft | InwardRight | OutwardLeft | OutwardRight
 
@@ -32,7 +32,7 @@ renderRoom r =
   (foldl' atop mempty $ map (\d -> renderDoor r d) $ doors r)
 
 renderDoor :: Room -> Door -> Diagram B
-renderDoor r (Door d t _) =
+renderDoor r (Door d t o) =
   let t' = case t of
              InwardLeft -> negate
              OutwardRight -> id
@@ -42,13 +42,20 @@ renderDoor r (Door d t _) =
              InwardLeft -> fmap negate d
              InwardRight -> fmap negate d
              _ -> d
-      wOffset = dimensions r * (fromDirection $ d)
+      wOffset = (/ 2) $ dimensions r * (fromDirection $ d)
+      centeringDirection = rotate (t' 1/4 @@ turn) (fromDirection d')
+      cOffset = -45 * centeringDirection
+      wallDirection = rotate (1/4 @@ turn) (fromDirection d)
+      wSize = abs . sum $ dimensions r * wallDirection
+      dOffset = if o >= 0 then pure (o + 45 - (wSize/2)) * wallDirection
+                         else pure (wSize + o - 45 - (wSize/2)) * wallDirection
   in (arc' 90 d' (t' 1/4 @@ turn) # lw thin
       `atop`
       (arrowV (90 * fromDirection d')) # lw thin)
-     # rectEnvelope (mkP2 0 0) (mkR2 0 0)
-     # translate (wOffset / 2) -- To wall
-     # translate (-45 * (rotate (t' 1/4 @@ turn) (fromDirection d'))) -- Align center
+     # rectEnvelope (mkP2 0 0) (mkR2 0 0) -- Size 0 envelope
+     # translate wOffset -- To wall
+     # translate cOffset -- Correct for center of door
+     # translate dOffset -- Place correctly in wall
 
 mkRoom :: Double -> Double -> Room
 mkRoom x y = Room (mkR2 x y) []
