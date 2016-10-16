@@ -47,8 +47,8 @@ renderDoor r (Door d t o) =
       cOffset = -45 * centeringDirection
       wallDirection = rotate (1/4 @@ turn) (fromDirection d)
       wSize = abs . sum $ dimensions r * wallDirection
-      dOffset = if o >= 0 then pure (o + 45 - (wSize/2)) * wallDirection
-                         else pure (wSize + o - 45 - (wSize/2)) * wallDirection
+      dOffset = if o >= 0 then pure (o + 50 - (wSize/2)) * wallDirection
+                         else pure (wSize + o - 50 - (wSize/2)) * wallDirection
   in (arc' 90 d' (t' 1/4 @@ turn) # lw thin
       `atop`
       (arrowV (90 * fromDirection d')) # lw thin)
