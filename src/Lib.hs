@@ -38,6 +38,7 @@ renderDoor w (Door d t) =
              InwardRight -> negate
              OutwardLeft -> negate
   in (arc' 100 d (t' 1/4 @@ turn) `atop` (arrowV (100 * fromDirection d)))
+     # rectEnvelope (mkP2 0 0) (mkR2 0 0)
      # translate (w / 2) -- To wall
      # translate (-50 * (rotate (t' 1/4 @@ turn) (fromDirection d))) -- Align center
 
