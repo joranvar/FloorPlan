@@ -14,7 +14,7 @@ module Lib
 
 import Data.List (foldl')
 import Diagrams.Prelude
-import Diagrams.Backend.Canvas (B)
+import Diagrams.Backend.SVG (B)
 
 data Room = Room { dimensions::V2 Double
                  , doors::[ Door ] }

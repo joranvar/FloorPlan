@@ -11,7 +11,7 @@ def run_all_tests m
   print m
   execute %{
     stack test
-    stack exec FloorPlan-exe
+    stack exec FloorPlan-exe -- -o FloorPlan.svg
   }
 end
 
