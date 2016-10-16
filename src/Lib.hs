@@ -6,6 +6,8 @@ module Lib
   (
     -- * Domain types
     Room(..)
+  , Door(..)
+  , DoorDirection(..)
     -- * Rendering functions
   , floorPlan
   ) where
@@ -13,19 +15,29 @@ module Lib
 import Diagrams.Prelude
 import Diagrams.Backend.Canvas (B)
 
-data Room = Room Int Int
+data Room = Room { dimensions::V2 Double
+                 , doors::[ Door ] }
+
+data Door = Door { wall::Direction V2 Double
+                 , direction::DoorDirection }
+
+data DoorDirection = InWardLeft | InWardRight | OutwardLeft | OutwardRight
 
 renderRoom :: Room -> Diagram B
-renderRoom (Room w h) = rect (fromIntegral w) (fromIntegral h)
 
-bedroom1, bedroom2, kitchen, bathroom, hall, livingroom, toilet :: Room
-bedroom1 = Room (120 + 100 + 15) (60 + 100 + 125 + 120)
-bedroom2 = Room (55 + 110 + 50) (60 + 100 + 125 + 120)
-kitchen = Room (60 + 60 + 100 + 15 + 55 + 110 + 50) (100 + 20 + 100)
-bathroom = Room (75 + 100 + 75) (125 + 120)
-hall = Room (75 + 100 + 75) (100 + 60 + 100)
-livingroom = Room (148 + 122 + 140) (122 + 200 + 125 + 162 + 142)
-toilet = Room 100 100
+renderRoom (Room dim _) = uncurry rect . unr2 $ dim
+
+mkRoom :: Double -> Double -> Room
+mkRoom x y = Room (mkR2 x y) []
+
+bedroom1, bedroom2, kitchen, bathroom, hall, livingroom, toilet ::  Room
+bedroom1   = mkRoom (120 + 100 + 15)                     (60 + 100 + 125 + 120)
+bedroom2   = mkRoom (55 + 110 + 50)                      (60 + 100 + 125 + 120)
+kitchen    = mkRoom (60 + 60 + 100 + 15 + 55 + 110 + 50) (100 + 20 + 100)
+bathroom   = mkRoom (75 + 100 + 75)                      (125 + 120)
+hall       = mkRoom (75 + 100 + 75)                      (100 + 60 + 100)
+livingroom = mkRoom (148 + 122 + 140)                    (122 + 200 + 125 + 162 + 142)
+toilet     = mkRoom 100                                  100
 
 rooms :: Diagram B
 rooms =
