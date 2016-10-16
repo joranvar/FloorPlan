@@ -33,16 +33,20 @@ renderRoom r =
 renderDoor :: V2 Double -> Door -> Diagram B
 renderDoor w (Door d t) =
   let t' = case t of
-             InwardLeft -> id
+             InwardLeft -> negate
              OutwardRight -> id
-             InwardRight -> negate
+             InwardRight -> id
              OutwardLeft -> negate
-  in (arc' 90 d (t' 1/4 @@ turn) # lw thin
+      d' = case t of
+             InwardLeft -> fmap negate d
+             InwardRight -> fmap negate d
+             _ -> d
+  in (arc' 90 d' (t' 1/4 @@ turn) # lw thin
       `atop`
-      (arrowV (90 * fromDirection d)) # lw thin)
+      (arrowV (90 * fromDirection d')) # lw thin)
      # rectEnvelope (mkP2 0 0) (mkR2 0 0)
      # translate (w / 2) -- To wall
-     # translate (-45 * (rotate (t' 1/4 @@ turn) (fromDirection d))) -- Align center
+     # translate (-45 * (rotate (t' 1/4 @@ turn) (fromDirection d'))) -- Align center
 
 mkRoom :: Double -> Double -> Room
 mkRoom x y = Room (mkR2 x y) []
