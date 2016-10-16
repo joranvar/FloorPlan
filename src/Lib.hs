@@ -77,6 +77,8 @@ mkRoom x y = Room (mkR2 x y) [] []
 bedroom1, bedroom2, kitchen, bathroom, hall, livingroom, toilet ::  Room
 bedroom1   = mkRoom (120 + 100 + 15)                     (60 + 100 + 125 + 120)
            # addDoor (Door (direction unit_Y) InwardRight (-15))
+           # addFurniture (Furniture (mkR2 ((120 + 100 + 15 - 160) / 2) (60 + 100 + 125 + 120 - 220 - 30))
+                                     (mkR2 160 220) "bed")
 bedroom2   = mkRoom (55 + 110 + 50)                      (60 + 100 + 125 + 120)
            # addDoor (Door (direction unitX) InwardLeft 60)
            # addFurniture (Furniture (mkR2 0 0) (mkR2 (55 + 110 + 50) 60) "closet")
