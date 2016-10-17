@@ -89,7 +89,7 @@ bathroom   = mkRoom (75 + 100 + 75)                      (125 + 120)
            # addDoor (Door (direction unit_Y) OutwardLeft 75)
 hall       = mkRoom (75 + 100 + 75)                      (100 + 60 + 100)
            # addDoor (Door (direction unit_Y) InwardRight (-130))
-livingroom = mkRoom (148 + 122 + 140)                    (122 + 200 + 125 + 162 + 142)
+livingroom = mkRoom (140 + 120 + 140)                    (122 + 200 + 125 + 162 + 142)
            # addDoor (Door (direction unit_X) InwardLeft (122 + 125))
 toilet     = mkRoom 100                                  100
            # addDoor (Door (direction unitY) OutwardRight 0)
